@@ -41,3 +41,5 @@ my-app/.vercel
 my-app/next-env.d.ts
 
 .venv
+
+backend/.env

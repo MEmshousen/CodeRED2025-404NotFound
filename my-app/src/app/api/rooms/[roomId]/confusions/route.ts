@@ -5,7 +5,8 @@ import path from "node:path";
 
 export const runtime = "nodejs";
 
-const DATA_DIR = path.join(process.cwd(), "data");
+const DATA_DIR = "/tmp";
+
 const CONFUSIONS_FILE = path.join(DATA_DIR, "confusions.json");
 
 type Confusion = {

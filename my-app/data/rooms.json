@@ -1,52 +1,8 @@
 {
-  "2": {
-    "id": "2",
-    "name": "2",
-    "teacherName": "2",
-    "createdAt": 1760852400130
-  },
-  "3": {
-    "id": "3",
-    "name": "3",
-    "teacherName": "3",
-    "createdAt": 1760854298570
-  },
-  "5": {
-    "id": "5",
-    "name": "5",
-    "teacherName": "5",
-    "createdAt": 1760854718057
-  },
-  "111": {
-    "id": "111",
-    "name": "111",
-    "teacherName": "111",
-    "createdAt": 1760852339570
-  },
-<<<<<<< HEAD
-  "1234": {
-    "id": "1234",
-    "name": "booby",
-    "teacherName": "professor deez nuts",
-    "createdAt": 1760882078394
-=======
-  "1221": {
-    "id": "1221",
-    "name": "1221",
-    "teacherName": "1221",
-    "createdAt": 1760883105287
->>>>>>> refs/remotes/origin/main
-  },
-  "554545": {
-    "id": "554545",
-    "name": "554545",
-    "teacherName": "554545",
-    "createdAt": 1760858768849
-  },
-  "z": {
-    "id": "z",
-    "name": "21",
-    "teacherName": "a",
-    "createdAt": 1760855808962
+  "123": {
+    "id": "123",
+    "name": "123",
+    "teacherName": "123",
+    "createdAt": 1760886922751
   }
 }

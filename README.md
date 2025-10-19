@@ -286,3 +286,4 @@ For issues and questions:
 - [ ] Advanced AI features
 - [ ] Real-time notifications
 - [ ] Video integration for hybrid classes
+      

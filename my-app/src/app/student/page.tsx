@@ -239,7 +239,7 @@ export default function StudentView() {
                   <Button
                     onClick={joinRoom}
                     disabled={loading}
-                    className="w-full bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700"
+                    className="w-full bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white"
                   >
                     {loading ? (
                       <>
@@ -385,7 +385,7 @@ export default function StudentView() {
                 <Button
                   onClick={submitConfusion}
                   disabled={loading}
-                  className="w-full bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700"
+                  className="w-full bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white"
                 >
                   {loading ? (
                     <>

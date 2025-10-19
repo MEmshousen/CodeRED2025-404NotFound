@@ -1,5 +1,5 @@
 # Clarity - Real-time Learning Platform
-
+<img src=".\my-app\src\app\favicon.ico" alt="logo" width="100" align="right"/>
 A comprehensive educational platform that enables real-time communication between teachers and students through anonymous confusion point submissions. Built with modern web technologies and AI-powered insights.
 
 ## Project Overview
@@ -101,28 +101,6 @@ cp .env.example .env.local
 npm run dev
 ```
 
-#### 2. Backend (Django)
-```bash
-# Navigate to backend directory
-cd backend
-
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Set up database
-python manage.py migrate
-
-# Create superuser
-python manage.py createsuperuser
-
-# Run development server
-python manage.py runserver
-```
-
 ### Simple Version Setup
 
 #### 1. Database Configuration
@@ -173,7 +151,7 @@ CodeRED2025-404NotFound/
 
 ### Modern Version
 - **Frontend**: Next.js 15, React 19, TypeScript, Tailwind CSS, Framer Motion
-- **Backend**: Django 5.2, Django REST Framework, PostgreSQL
+- **Backend**: Next.js 15, React 19, TypeScript, Tailwind CSS, Framer Motion
 - **AI**: Google Gemini API integration
 - **Deployment**: Vercel (frontend), Railway/Heroku (backend)
 

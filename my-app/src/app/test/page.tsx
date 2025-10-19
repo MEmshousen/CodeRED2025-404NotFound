@@ -1,3 +1,8 @@
 export default function Test() {
-  return <div>asdfkjladskf</div>;
+  return (
+    <div>
+      <h1>Test Page</h1>
+      <p>This is a test page in the application.</p>
+    </div>
+  );
 }

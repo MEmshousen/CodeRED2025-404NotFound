@@ -1,0 +1,17 @@
+"use client";
+
+export default function Teacher() {
+  console.log("Teacher page accessed");
+
+  function test() {
+    console.log("Button clicked");
+  }
+
+  return (
+    <div>
+      <h1>Test Page</h1>
+      <p>This is a test page in the application.</p>
+      <button onClick={test}>Boop</button>
+    </div>
+  );
+}

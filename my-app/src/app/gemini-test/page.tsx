@@ -4,7 +4,7 @@
 import { useState } from "react";
 
 const SAMPLE_TEXT = `
-ClArIty is a real-time classroom tool where students can anonymously post confusion points.
+Clarity is a real-time classroom tool where students can anonymously post confusion points.
 Teachers see aggregate themes and AI summaries to decide what to revisit.
 It works well for large lectures and hybrid classes.
 `;

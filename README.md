@@ -1,10 +1,10 @@
-# ClArIty - Real-time Learning Platform
+# Clarity - Real-time Learning Platform
 
 A comprehensive educational platform that enables real-time communication between teachers and students through anonymous confusion point submissions. Built with modern web technologies and AI-powered insights.
 
 ## Project Overview
 
-ClArIty is a multi-tier educational platform designed to bridge the gap between teachers and students by providing an anonymous channel for students to express confusion points during or after class. The platform offers both a modern, full-featured version and a simple, lightweight version for different deployment needs.
+Clarity is a multi-tier educational platform designed to bridge the gap between teachers and students by providing an anonymous channel for students to express confusion points during or after class. The platform offers both a modern, full-featured version and a simple, lightweight version for different deployment needs.
 
 ## Architecture
 
@@ -78,14 +78,6 @@ python manage.py runserver
 - PHP 7.4+
 - MySQL 5.7+
 - Web server (Apache/Nginx) or XAMPP
-
-#### Setup with XAMPP (Easiest)
-1. Download and install XAMPP
-2. Start Apache and MySQL services
-3. Copy `simple_clarity/` folder to `htdocs/`
-4. Create database `clarity_simple` in phpMyAdmin
-5. Import `simple_clarity/database.sql`
-6. Access at `http://localhost/simple_clarity/`
 
 ## Detailed Setup Instructions
 
@@ -252,27 +244,9 @@ npm run type-check
 3. **Database**: Use PostgreSQL service
 4. **Environment**: Set production environment variables
 
-### Simple Deployment (PHP Version)
-1. Upload files to web server
-2. Create MySQL database
-3. Import database schema
-4. Configure database connection
-
-## Security Considerations
-- All passwords are hashed using secure algorithms
-- Input validation and sanitization implemented
-- SQL injection protection with prepared statements
-- CORS configuration for API security
-- Rate limiting for API endpoints
-
-## Contributing
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
 ## License
 This project is part of CodeRED 2025 competition.
+
 ## Support
 For issues and questions:
 - Check the troubleshooting section in `simple_clarity/README.md`
@@ -280,9 +254,9 @@ For issues and questions:
 - Check browser console for frontend errors
 
 ## Roadmap
-- [ ] Advanced analytics dashboard
-- [ ] Integration with learning management systems
-- [ ] Multi-language support
-- [ ] Advanced AI features
-- [ ] Real-time notifications
-- [ ] Video integration for hybrid classes
+- Advanced analytics dashboard
+- Integration with learning management systems
+- Multi-language support
+- Advanced AI features
+- Real-time notifications
+- Video integration for hybrid classes

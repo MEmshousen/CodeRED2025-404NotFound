@@ -278,14 +278,7 @@ export default function TeacherDashboard({ onBack }: TeacherDashboardProps) {
             <Card className="backdrop-blur-sm bg-white/90 shadow-2xl border-2 border-blue-200">
               <CardHeader>
                 <div className="flex items-center gap-3 mb-2">
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
-                  >
+                  <motion.div>
                     <Users className="h-6 w-6 text-blue-600" />
                   </motion.div>
                   <CardTitle className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">

@@ -14,6 +14,7 @@
     "timestamp": 1760868986314
   },
   {
+<<<<<<< HEAD
     "id": "b59d3b74-a963-4fac-bb7e-974fdf235737",
     "roomId": "1234",
     "topic": "Recursion",
@@ -33,5 +34,12 @@
     "topic": "Statistics",
     "details": "I need help with confidence intervals. I forgot the formula.",
     "timestamp": 1760882360082
+=======
+    "id": "45ac779b-5ccd-42ca-9637-e22d9c1b34a8",
+    "roomId": "1221",
+    "topic": "asdzxc",
+    "details": "aaaaa",
+    "timestamp": 1760883120005
+>>>>>>> refs/remotes/origin/main
   }
 ]

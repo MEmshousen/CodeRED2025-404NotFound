@@ -37,7 +37,7 @@ export default function HomePage() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
           >
-            ClArIty
+            Clarity
           </motion.h1>
 
           <motion.p

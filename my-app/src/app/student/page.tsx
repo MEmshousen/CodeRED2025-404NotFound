@@ -129,7 +129,7 @@ export default function StudentView({ onBack }: StudentViewProps) {
 
   // Auto-refresh recent submissions every 10 seconds
   useEffect(() => {
-    let interval: number;
+    let interval: any;
     if (currentRoomId && step === "submit") {
       interval = setInterval(() => {
         loadRecentSubmissions(currentRoomId);

@@ -1,5 +1,5 @@
 // src/app/api/rooms/[roomId]/confusions/route.ts
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -36,20 +36,29 @@ function writeAll(items: Confusion[]) {
   fs.writeFileSync(CONFUSIONS_FILE, JSON.stringify(items, null, 2), "utf8");
 }
 
-export async function GET(_req: Request, { params }: { params: { roomId: string } }) {
+export async function GET(
+  _req: NextRequest,
+  context: { params: Promise<{ roomId: string }> }
+) {
   try {
+    const { roomId } = await context.params; // 👈 await the Promise
     const all = readAll();
     const confusions = all
-      .filter((c) => c.roomId === params.roomId)
+      .filter((c) => c.roomId === roomId)
       .sort((a, b) => b.timestamp - a.timestamp);
+
     return NextResponse.json({ confusions });
   } catch (e: any) {
     return NextResponse.json({ error: e?.message ?? "Failed to read" }, { status: 500 });
   }
 }
 
-export async function POST(req: Request, { params }: { params: { roomId: string } }) {
+export async function POST(
+  req: NextRequest,
+  context: { params: Promise<{ roomId: string }> }
+) {
   try {
+    const { roomId } = await context.params; // 👈 await the Promise
     const { topic, details } = await req.json();
 
     if (!topic || typeof topic !== "string") {
@@ -59,15 +68,15 @@ export async function POST(req: Request, { params }: { params: { roomId: string 
     const all = readAll();
     const newConfusion: Confusion = {
       id: crypto.randomUUID(),
-      roomId: params.roomId,
+      roomId,
       topic: topic.trim(),
       details: (details ?? "").toString().trim() || undefined,
       timestamp: Date.now(),
     };
+
     all.push(newConfusion);
     writeAll(all);
 
-    // IMPORTANT: return JSON, not 204
     return NextResponse.json({ confusion: newConfusion }, { status: 201 });
   } catch (e: any) {
     return NextResponse.json({ error: e?.message ?? "Failed to create" }, { status: 500 });

@@ -283,7 +283,7 @@ export default function TeacherDashboard({
                     Create Teacher Room
                   </CardTitle>
                 </div>
-                <CardDescription>
+                <CardDescription className="text-black">
                   Create a room where students can submit their
                   confusion points
                 </CardDescription>
@@ -617,7 +617,7 @@ export default function TeacherDashboard({
               <CardTitle className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 Student Confusion Submissions
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-black">
                 Anonymous submissions from students in real-time
               </CardDescription>
             </CardHeader>

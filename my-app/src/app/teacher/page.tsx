@@ -54,85 +54,55 @@ export default function TeacherDashboard({
   const [error, setError] = useState("");
   const [autoRefresh, setAutoRefresh] = useState(false);
 
-  const joinRoom = async () => {
-    if (!roomId.trim()) {
-      setError("Please enter a room ID");
-      return;
-    }
+  
 
-    setLoading(true);
-    setError("");
+  // create
+const createRoom = async () => {
+  if (!roomId.trim() || !roomName.trim()) {
+    setError("Please provide both room ID and room name");
+    return;
+  }
+  setLoading(true); setError("");
+  try {
+    const res = await fetch("/api/rooms", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        roomId: roomId.trim(),
+        roomName: roomName.trim(),
+        teacherName: teacherName.trim(),
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Failed to create room");
+    setCurrentRoomId(roomId.trim());
+    setRoomName(data.room.name);
+    setStep("view");
+  } catch (e: any) {
+    setError(e.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
-    try {
-      const response = await fetch(
-        `https://${projectId}.supabase.co/functions/v1/make-server-b107cdc9/rooms/${roomId.trim()}`,
-        {
-          headers: {
-            Authorization: `Bearer ${publicAnonKey}`,
-          },
-        },
-      );
+// join
+const joinRoom = async () => {
+  if (!roomId.trim()) { setError("Please enter a room ID"); return; }
+  setLoading(true); setError("");
+  try {
+    const res = await fetch(`/api/rooms/${encodeURIComponent(roomId.trim())}`);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Room not found");
+    setCurrentRoomId(roomId.trim());
+    setRoomName(data.room.name);
+    setStep("view"); // or "submit" per your flow
+  } catch (e: any) {
+    setError(e.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Room not found");
-      }
-
-      setCurrentRoomId(roomId.trim());
-      setRoomName(data.room.name);
-      setStep("submit");
-      loadRecentSubmissions(roomId.trim());
-    } catch (err: any) {
-      console.error("Error joining room:", err);
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const createRoom = async () => {
-    if (!roomId.trim() || !roomName.trim()) {
-      setError("Please provide both room ID and room name");
-      return;
-    }
-
-    setLoading(true);
-    setError("");
-
-    try {
-      const response = await fetch(
-        `https://${projectId}.supabase.co/functions/v1/make-server-b107cdc9/rooms`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${publicAnonKey}`,
-          },
-          body: JSON.stringify({
-            roomId: roomId.trim(),
-            roomName: roomName.trim(),
-            teacherName: teacherName.trim(),
-          }),
-        },
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to create room");
-      }
-
-      setCurrentRoomId(roomId.trim());
-      setStep("view");
-      loadConfusions(roomId.trim());
-    } catch (err: any) {
-      console.error("Error creating room:", err);
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const loadConfusions = async (rId: string) => {
     try {

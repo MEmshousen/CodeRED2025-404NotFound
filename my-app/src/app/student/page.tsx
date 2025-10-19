@@ -140,7 +140,7 @@ export default function StudentView({ onBack }: StudentViewProps) {
     };
   }, [currentRoomId, step]);
 
-  const formatTime = (timestamp: number) => {
+  const formatTime = (timestamp: any) => {
     const date = new Date(timestamp);
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();

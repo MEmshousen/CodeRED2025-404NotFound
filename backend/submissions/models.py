@@ -13,10 +13,3 @@ class PainPoint(models.Model):
     # optional simple topic tag
     topic = models.CharField(max_length=120, blank=True)
 
-class StudyPacket(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="study_packets")
-    status = models.CharField(max_length=20, default="PENDING") # PENDING/READY/APPROVED/SENT
-    payload = models.JSONField(default=dict, blank=True) # quizzes/flashcards/summaries
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    approved_at = models.DateTimeField(null=True, blank=True)

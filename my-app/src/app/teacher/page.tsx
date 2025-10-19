@@ -105,30 +105,21 @@ const joinRoom = async () => {
 
 
   const loadConfusions = async (rId: string) => {
-    try {
-      const response = await fetch(
-        `https://${projectId}.supabase.co/functions/v1/make-server-b107cdc9/rooms/${rId}/confusions`,
-        {
-          headers: {
-            Authorization: `Bearer ${publicAnonKey}`,
-          },
-        },
-      );
+  try {
+    const response = await fetch(`/api/rooms/${encodeURIComponent(rId)}/confusions`);
+    const data = await response.json();
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          data.error || "Failed to load confusions",
-        );
-      }
-
-      setConfusions(data.confusions || []);
-    } catch (err: any) {
-      console.error("Error loading confusions:", err);
-      setError(err.message);
+    if (!response.ok) {
+      throw new Error(data.error || "Failed to load confusions");
     }
-  };
+
+    setConfusions(data.confusions || []);
+  } catch (err: any) {
+    console.error("Error loading confusions:", err);
+    setError(err.message);
+  }
+};
+
 
   const generateSummary = async () => {
     setLoading(true);
@@ -339,20 +330,7 @@ const joinRoom = async () => {
 
   return (
     <div className="min-h-screen relative overflow-hidden p-8">
-      <Button
-        onClick={joinRoom}
-        disabled={loading}
-        className="w-full bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700"
-      >
-        {loading ? (
-          <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Joining...
-          </>
-        ) : (
-          "Join Room"
-        )}
-      </Button>
+      
       <AnimatedBackground />
 
       <motion.div

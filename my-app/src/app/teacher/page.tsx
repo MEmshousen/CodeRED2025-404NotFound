@@ -22,11 +22,7 @@ import {
   Brain,
 } from "lucide-react";
 import { AnimatedBackground } from "@components/ui/AnimatedBackground";
-import {
-  projectId,
-  publicAnonKey,
-} from "@components/utils/info";
-
+import { projectId, publicAnonKey } from "@components/utils/info";
 
 interface Confusion {
   id: string;
@@ -40,9 +36,7 @@ interface TeacherDashboardProps {
   onBack: () => void;
 }
 
-export default function TeacherDashboard({
-  onBack,
-}: TeacherDashboardProps) {
+export default function TeacherDashboard({ onBack }: TeacherDashboardProps) {
   const [step, setStep] = useState<"create" | "view">("create");
   const [roomId, setRoomId] = useState("");
   const [roomName, setRoomName] = useState("");
@@ -54,101 +48,151 @@ export default function TeacherDashboard({
   const [error, setError] = useState("");
   const [autoRefresh, setAutoRefresh] = useState(false);
 
-  
-
   // create
-const createRoom = async () => {
-  if (!roomId.trim() || !roomName.trim()) {
-    setError("Please provide both room ID and room name");
-    return;
-  }
-  setLoading(true); setError("");
-  try {
-    const res = await fetch("/api/rooms", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        roomId: roomId.trim(),
-        roomName: roomName.trim(),
-        teacherName: teacherName.trim(),
-      }),
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Failed to create room");
-    setCurrentRoomId(roomId.trim());
-    setRoomName(data.room.name);
-    setStep("view");
-  } catch (e: any) {
-    setError(e.message);
-  } finally {
-    setLoading(false);
-  }
-};
+  const createRoom = async () => {
+    if (!roomId.trim() || !roomName.trim()) {
+      setError("Please provide both room ID and room name");
+      return;
+    }
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch("/api/rooms", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          roomId: roomId.trim(),
+          roomName: roomName.trim(),
+          teacherName: teacherName.trim(),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to create room");
+      setCurrentRoomId(roomId.trim());
+      setRoomName(data.room.name);
+      setStep("view");
+    } catch (e: any) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-// join
-const joinRoom = async () => {
-  if (!roomId.trim()) { setError("Please enter a room ID"); return; }
-  setLoading(true); setError("");
-  try {
-    const res = await fetch(`/api/rooms/${encodeURIComponent(roomId.trim())}`);
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Room not found");
-    setCurrentRoomId(roomId.trim());
-    setRoomName(data.room.name);
-    setStep("view"); // or "submit" per your flow
-  } catch (e: any) {
-    setError(e.message);
-  } finally {
-    setLoading(false);
-  }
-};
+  // join
+  // join
+  const joinRoom = async () => {
+    if (!roomId.trim()) {
+      setError("Please enter a room ID");
+      return;
+    }
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch(
+        `/api/rooms/${encodeURIComponent(roomId.trim())}`
+      );
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Room not found");
 
+      const id = roomId.trim();
+      setCurrentRoomId(id);
+      setRoomName(data.room.name);
+      setStep("view");
+      await loadConfusions(id); // ✅ load right away
+    } catch (e: any) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const loadConfusions = async (rId: string) => {
-  try {
-    const response = await fetch(`/api/rooms/${encodeURIComponent(rId)}/confusions`);
-    const data = await response.json();
+    try {
+      const response = await fetch(
+        `/api/rooms/${encodeURIComponent(rId)}/confusions`
+      );
+      const data = await response.json();
 
-    if (!response.ok) {
-      throw new Error(data.error || "Failed to load confusions");
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to load confusions");
+      }
+
+      setConfusions(data.confusions || []);
+    } catch (err: any) {
+      console.error("Error loading confusions:", err);
+      setError(err.message);
     }
+  };
 
-    setConfusions(data.confusions || []);
-  } catch (err: any) {
-    console.error("Error loading confusions:", err);
-    setError(err.message);
-  }
-};
-
-
+  // TeacherDashboard.tsx
   const generateSummary = async () => {
     setLoading(true);
     setError("");
 
     try {
-      const response = await fetch(
-        `https://${projectId}.supabase.co/functions/v1/make-server-b107cdc9/rooms/${currentRoomId}/summarize`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${publicAnonKey}`,
-          },
-        },
+      // 1) Load all submissions for this room
+      const res = await fetch(
+        `/api/rooms/${encodeURIComponent(currentRoomId)}/confusions`
       );
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to load submissions");
 
-      const data = await response.json();
+      const items: Confusion[] = Array.isArray(data.confusions)
+        ? data.confusions
+        : [];
 
-      if (!response.ok) {
+      if (items.length === 0) {
+        setSummary("No submissions yet—nothing to summarize.");
+        return;
+      }
+
+      // 2) Build a clear, compact prompt from the submissions
+      const lines = items
+        .map(
+          (c, i) =>
+            `#${i + 1} Topic: ${c.topic}${c.details ? ` — ${c.details}` : ""}`
+        )
+        .join("\n");
+
+      const prompt = [
+        "You are an AI teaching assistant.",
+        "Your task is to summarize student confusion submissions into a short, clear summary.",
+        "",
+        "✅ Output Requirements:",
+        "- Focus only on meaningful and relevant confusion topics.",
+        "- Ignore irrelevant, empty, or nonsensical entries (e.g., gibberish, single letters, or jokes).",
+        "- Group similar confusions together under a common theme.",
+        "- Use concise language and avoid speculation or advice.",
+        "- Return only the final summary text — no introductions like 'Here’s a breakdown' or suggestions.",
+        "",
+        "Student Submissions:",
+        lines,
+      ].join("\n");
+
+      // 3) Ask Gemini to summarize (uses your server API so the key stays secret)
+      const sumRes = await fetch("/api/summarize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: prompt }),
+      });
+
+      const ct = sumRes.headers.get("content-type") || "";
+      if (!ct.includes("application/json")) {
+        const text = await sumRes.text();
         throw new Error(
-          data.error || "Failed to generate summary",
+          `Unexpected response (${sumRes.status}): ${text.slice(0, 200)}`
         );
       }
 
-      setSummary(data.summary);
+      const sumData = await sumRes.json();
+      if (!sumRes.ok)
+        throw new Error(sumData.error || "Failed to generate summary");
+
+      // 4) Render in your existing <summary> UI
+      setSummary(sumData.summary);
     } catch (err: any) {
       console.error("Error generating summary:", err);
-      setError(err.message);
+      setError(err.message || "Failed to generate summary");
     } finally {
       setLoading(false);
     }
@@ -157,13 +201,15 @@ const joinRoom = async () => {
   const deleteConfusion = async (confusionKey: string) => {
     try {
       const response = await fetch(
-        `https://${projectId}.supabase.co/functions/v1/make-server-b107cdc9/confusions/${encodeURIComponent(confusionKey)}`,
+        `https://${projectId}.supabase.co/functions/v1/make-server-b107cdc9/confusions/${encodeURIComponent(
+          confusionKey
+        )}`,
         {
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${publicAnonKey}`,
           },
-        },
+        }
       );
 
       if (!response.ok) {
@@ -191,7 +237,9 @@ const joinRoom = async () => {
   });
 
   const getConfusionKey = (confusion: Confusion) => {
-    return `confusion:${confusion.roomId}:${new Date(confusion.timestamp).getTime()}:${confusion.id}`;
+    return `confusion:${confusion.roomId}:${new Date(
+      confusion.timestamp
+    ).getTime()}:${confusion.id}`;
   };
 
   const formatTime = (timestamp: string) => {
@@ -245,15 +293,12 @@ const joinRoom = async () => {
                   </CardTitle>
                 </div>
                 <CardDescription>
-                  Create a room where students can submit their
-                  confusion points
+                  Create a room where students can submit their confusion points
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="roomId">
-                    Room ID (Custom)
-                  </Label>
+                  <Label htmlFor="roomId">Room ID (Custom)</Label>
                   <Input
                     id="roomId"
                     placeholder="e.g., CS101-Fall2025"
@@ -268,25 +313,21 @@ const joinRoom = async () => {
                     id="roomName"
                     placeholder="e.g., Computer Science 101"
                     value={roomName}
-                    onChange={(e) =>
-                      setRoomName(e.target.value)
-                    }
+                    onChange={(e) => setRoomName(e.target.value)}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="teacherName">
-                    Your Name (Optional)
-                  </Label>
+                  <Label htmlFor="teacherName">Your Name (Optional)</Label>
                   <Input
                     id="teacherName"
                     placeholder="e.g., Prof. Smith"
                     value={teacherName}
-                    onChange={(e) =>
-                      setTeacherName(e.target.value)
-                    }
+                    onChange={(e) => setTeacherName(e.target.value)}
                   />
                 </div>
+
+                {/* …inputs above… */}
 
                 <AnimatePresence>
                   {error && (
@@ -301,25 +342,55 @@ const joinRoom = async () => {
                   )}
                 </AnimatePresence>
 
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <Button
-                    onClick={createRoom}
-                    disabled={loading}
-                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                {/* Two-button action row */}
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                   >
-                    {loading ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Creating Room...
-                      </>
-                    ) : (
-                      "Create Room"
-                    )}
-                  </Button>
-                </motion.div>
+                    <Button
+                      onClick={createRoom}
+                      disabled={loading}
+                      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                    >
+                      {loading ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Creating Room...
+                        </>
+                      ) : (
+                        "Create Room"
+                      )}
+                    </Button>
+                  </motion.div>
+
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Button
+                      variant="secondary"
+                      onClick={joinRoom}
+                      disabled={loading}
+                      className="w-full border-2 hover:border-teal-500"
+                    >
+                      {loading ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Logging In...
+                        </>
+                      ) : (
+                        "Log into Classroom"
+                      )}
+                    </Button>
+                  </motion.div>
+                </div>
+
+                <p className="text-xs text-gray-500 mt-2">
+                  Tip: To log into an existing room, just enter its{" "}
+                  <span className="font-medium">Room ID</span> above and click
+                  “Log into Classroom”.
+                </p>
               </CardContent>
             </Card>
           </motion.div>
@@ -330,7 +401,6 @@ const joinRoom = async () => {
 
   return (
     <div className="min-h-screen relative overflow-hidden p-8">
-      
       <AnimatedBackground />
 
       <motion.div
@@ -368,12 +438,9 @@ const joinRoom = async () => {
                 </span>
               </Badge>
             </motion.div>
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button
-                variant={autoRefresh ? "default" : "outline"}
+                variant={autoRefresh ? "default" : "secondary"}
                 onClick={() => setAutoRefresh(!autoRefresh)}
                 className={
                   autoRefresh
@@ -381,18 +448,11 @@ const joinRoom = async () => {
                     : ""
                 }
               >
-                {autoRefresh
-                  ? "Auto-refresh ON"
-                  : "Auto-refresh OFF"}
+                {autoRefresh ? "Auto-refresh ON" : "Auto-refresh OFF"}
               </Button>
             </motion.div>
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Button
-                onClick={() => loadConfusions(currentRoomId)}
-              >
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button onClick={() => loadConfusions(currentRoomId)}>
                 Refresh
               </Button>
             </motion.div>
@@ -483,9 +543,7 @@ const joinRoom = async () => {
                 >
                   <Button
                     onClick={generateSummary}
-                    disabled={
-                      loading || confusions.length === 0
-                    }
+                    disabled={loading || confusions.length === 0}
                     className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
                     size="sm"
                   >
@@ -576,8 +634,8 @@ const joinRoom = async () => {
                   animate={{ opacity: 1, scale: 1 }}
                   className="text-center py-12 text-gray-500"
                 >
-                  No confusion submissions yet. Share the room
-                  ID with your students!
+                  No confusion submissions yet. Share the room ID with your
+                  students!
                 </motion.div>
               ) : (
                 <div className="space-y-3">
@@ -610,9 +668,7 @@ const joinRoom = async () => {
                                 {confusion.topic}
                               </Badge>
                               <span className="text-sm text-gray-500">
-                                {formatTime(
-                                  confusion.timestamp,
-                                )}
+                                {formatTime(confusion.timestamp)}
                               </span>
                             </div>
                             {confusion.details && (
@@ -632,9 +688,7 @@ const joinRoom = async () => {
                               variant="ghost"
                               size="icon"
                               onClick={() =>
-                                deleteConfusion(
-                                  getConfusionKey(confusion),
-                                )
+                                deleteConfusion(getConfusionKey(confusion))
                               }
                               className="ml-4 hover:bg-red-50"
                             >

@@ -3,6 +3,7 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+
 import { AnimatedBackground } from '@/components/AnimatedBackground';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -74,7 +75,7 @@ export default function HomePage() {
                   For Teachers
                 </CardTitle>
                 <CardDescription>
-                  Create a room, share the ID with students, and get real-time insights into what's confusing your class
+                  Create a room, share the ID with students, and get real-time insights into what&apos;s confusing your class
                 </CardDescription>
               </CardHeader>
               <CardContent className="relative z-10">
@@ -130,7 +131,7 @@ export default function HomePage() {
                 <CardTitle className="bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">
                   For Students
                 </CardTitle>
-                <CardDescription>Join your class room and anonymously share topics you're confused about</CardDescription>
+                <CardDescription>Join your class room and anonymously share topics you&apos;re confused about</CardDescription>
               </CardHeader>
               <CardContent className="relative z-10">
                 <ul className="space-y-3 mb-6 text-sm text-gray-700">

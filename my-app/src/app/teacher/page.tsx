@@ -244,7 +244,7 @@ const joinRoom = async () => {
                     Create Teacher Room
                   </CardTitle>
                 </div>
-                <CardDescription className="text-black">
+                <CardDescription>
                   Create a room where students can submit their
                   confusion points
                 </CardDescription>

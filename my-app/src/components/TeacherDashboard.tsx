@@ -19,11 +19,11 @@ import {
   TrendingUp,
   Brain,
 } from "lucide-react";
-import { AnimatedBackground } from "./AnimatedBackground";
+import { AnimatedBackground } from "./ui/AnimatedBackground";
 import {
   projectId,
   publicAnonKey,
-} from "../utils/supabase/info";
+} from "./utils/supabase/info";
 
 
 interface Confusion {

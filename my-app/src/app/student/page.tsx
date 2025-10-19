@@ -9,6 +9,7 @@ import { Label } from '../../components/ui/label';
 import { Textarea } from '../../components/ui/textarea';
 import { Badge } from '../../components/ui/badge';
 import { Loader2, AlertCircle, CheckCircle2, Clock, Send } from 'lucide-react';
+import { AnimatedBackground } from '@/components/ui/AnimatedBackground';
 
 interface Confusion {
   id: string;
@@ -22,7 +23,7 @@ interface StudentViewProps {
   onBack: () => void;
 }
 
-export function StudentView({ onBack }: StudentViewProps) {
+export default function StudentView({ onBack }: StudentViewProps) {
   const [step, setStep] = useState<'join' | 'submit'>('join');
   const [roomId, setRoomId] = useState('');
   const [currentRoomId, setCurrentRoomId] = useState('');

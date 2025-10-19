@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { Textarea } from './ui/textarea';
-import { Badge } from './ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../ui/card';
+import { Button } from '../../../ui/button';
+import { Input } from '../../../ui/input';
+import { Label } from '../../../ui/label';
+import { Textarea } from '../../../ui/textarea';
+import { Badge } from '../../../ui/badge';
 import { Loader2, AlertCircle, CheckCircle2, Clock, Send } from 'lucide-react';
-import { AnimatedBackground } from './AnimatedBackground';
-import { projectId, publicAnonKey } from '../utils/supabase/info';
+import { AnimatedBackground } from './ui/AnimatedBackground';
+import { projectId, publicAnonKey } from './utils/supabase/info';
 
 interface Confusion {
   id: string;

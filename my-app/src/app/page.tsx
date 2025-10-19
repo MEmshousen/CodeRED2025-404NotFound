@@ -171,7 +171,7 @@ export default function HomePage() {
             <div className="absolute top-0 right-0 w-64 h-64 bg-purple-300 rounded-full blur-3xl opacity-20 -z-0" />
             <CardHeader className="relative z-10">
               <CardTitle className="flex items-center gap-2">
-                <motion.div animate={{ rotate: 360 }} transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}>
+                <motion.div>
                   <Sparkles className="h-6 w-6 text-purple-600" />
                 </motion.div>
                 <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">

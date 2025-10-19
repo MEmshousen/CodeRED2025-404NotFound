@@ -5,7 +5,12 @@ const DATA_DIR = "/tmp";
 
 const ROOMS_FILE = path.join(DATA_DIR, "rooms.json");
 
-type Room = { id: string; name: string; teacherName?: string; createdAt: number };
+type Room = {
+  id: string;
+  name: string;
+  teacherName?: string;
+  createdAt: number;
+};
 type RoomsShape = Record<string, Room>;
 
 // naive in-process mutex to avoid concurrent writes
@@ -19,6 +24,8 @@ function ensureFiles() {
 function readRooms(): RoomsShape {
   ensureFiles();
   const raw = fs.readFileSync(ROOMS_FILE, "utf8");
+  console.log("[fileStore] ROOMS_FILE =", ROOMS_FILE);
+
   try {
     return JSON.parse(raw || "{}") as RoomsShape;
   } catch {
@@ -40,7 +47,11 @@ export function getRoom(id: string): Room | null {
   return rooms[id] ?? null;
 }
 
-export async function createRoom(id: string, name: string, teacherName?: string) {
+export async function createRoom(
+  id: string,
+  name: string,
+  teacherName?: string
+) {
   const rooms = readRooms();
   if (rooms[id]) throw new Error("Room ID already exists");
   rooms[id] = { id, name, teacherName, createdAt: Date.now() };

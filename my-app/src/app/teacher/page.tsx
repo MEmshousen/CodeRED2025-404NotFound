@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation"; // ✅ import this
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -36,7 +37,9 @@ interface TeacherDashboardProps {
   onBack: () => void;
 }
 
-export default function TeacherDashboard({ onBack }: TeacherDashboardProps) {
+export default function TeacherDashboard() {
+  const router = useRouter(); // ✅ create router instance
+  const onBack = () => router.push("/"); // ✅ define navigation
   const [step, setStep] = useState<"create" | "view">("create");
   const [roomId, setRoomId] = useState("");
   const [roomName, setRoomName] = useState("");

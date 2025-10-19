@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation"; // ✅ import this
+
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -29,7 +31,9 @@ interface StudentViewProps {
   onBack: () => void;
 }
 
-export default function StudentView({ onBack }: StudentViewProps) {
+export default function StudentView() {
+  const router = useRouter(); // ✅ create router instance
+  const onBack = () => router.push("/"); // ✅ define navigation
   const [step, setStep] = useState<"join" | "submit">("join");
   const [roomId, setRoomId] = useState("");
   const [currentRoomId, setCurrentRoomId] = useState("");
